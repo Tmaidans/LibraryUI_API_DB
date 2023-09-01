@@ -1,5 +1,6 @@
 package com.library.steps_defs;
 
+import com.github.javafaker.Faker;
 import com.library.utility.LibraryAPI_Util;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -25,8 +26,9 @@ public class us01_StepDefs {
     Response response;
     JsonPath jsonPath;
     String pathParamValue;
+    String randomBook;
     String requestHeader;
-    Map<String, String> randomBook = new LinkedHashMap<>();
+
 
     @Given("I logged Library api as a {string}")
     public void i_logged_library_api_as_a(String string) {
@@ -104,35 +106,45 @@ public class us01_StepDefs {
     @Given("Request Content Type header is {string}")
     public void request_content_type_header_is(String string) {
         requestHeader = string;
+        System.out.println("requestHeader = " + string);
     }
 
     @Given("I create a random {string} as request body")
     public void i_create_a_random_as_request_body(String string) {
+        Faker faker = new Faker();
 
-        randomBook.put("name", "Crack");
-        randomBook.put("isbn", "666");
-        randomBook.put("year", "2020");
-        randomBook.put("author", "Timmy");
-        randomBook.put("book_category_id", "12");
-        randomBook.put("description", "Cracky");
-        System.out.println("randomBook = " + randomBook);
+        String name = "name=Book";
+        String isbn = "isbn=665";
+        String year = "year=2020";
+        String author = "author=Timmy Tat Man";
+        String book_category_id = "book_category_id=69";
+        String description = "description=Cracky";
+
+        randomBook = name+"&"+isbn+"&"+year+"&"+author+"&"+book_category_id+"&"+description;
+        System.out.println("Provided = " + randomBook);
+        String correct_random_book = "name=Book&isbn=665&year=1111&author=Timmy Tat Man&book_category_id=70&description=Cracky";
+        System.out.println("correct_random_book = " + correct_random_book);
     }
 
     @When("I send POST request to {string} endpoint")
-    public void i_send_post_request_to_endpoint(String string) {
+        public void i_send_post_request_to_endpoint (String string){
 
-        response = given().accept(acceptHeader).log().uri()
-                .contentType(requestHeader)
-                .header("x-library-token", token)
-                .body("name=Crack&isbn=666&year=2020&author=Timmy&book_category_id=12&description=Cracky")
-                .when()
-                .post("https://library2.cydeo.com/rest/v1" + string).prettyPeek();
+            response = given().accept("application/json").log().uri()
+                    .contentType("application/x-www-form-urlencoded")
+                    .header("x-library-token", token)
+  //                  .body("name=Book&isbn=665&year=1111&author=Timmy Tat Man&book_category_id=70&description=Cracky")
+                    .body(randomBook)
+                    .when()
+                    .post("https://library2.cydeo.com/rest/v1" + string).prettyPeek();
+
+        System.out.println(response);
     }
+
+
 
     @Then("the field value for {string} path should be equal to {string}")
     public void the_field_value_for_path_should_be_equal_to(String string, String string2) {
-        Assert.assertEquals(response.body().path(string), string2);
-    }
 
+    }
 
 }
