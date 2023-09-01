@@ -113,12 +113,12 @@ public class us01_StepDefs {
     public void i_create_a_random_as_request_body(String string) {
         Faker faker = new Faker();
 
-        String name = "name=Book";
-        String isbn = "isbn=665";
-        String year = "year=2020";
-        String author = "author=Timmy Tat Man";
-        String book_category_id = "book_category_id=69";
-        String description = "description=Cracky";
+        String name = "name="+faker.book().title();
+        String isbn = "isbn="+faker.number().randomNumber(4,false);
+        String year = "year="+faker.number().numberBetween(1900,2023);
+        String author = "author="+faker.book().author();
+        String book_category_id = "book_category_id="+faker.number().randomNumber(2,false);
+        String description = "description="+faker.lorem().paragraph();
 
         randomBook = name+"&"+isbn+"&"+year+"&"+author+"&"+book_category_id+"&"+description;
         System.out.println("Provided = " + randomBook);
@@ -132,7 +132,6 @@ public class us01_StepDefs {
             response = given().accept("application/json").log().uri()
                     .contentType("application/x-www-form-urlencoded")
                     .header("x-library-token", token)
-  //                  .body("name=Book&isbn=665&year=1111&author=Timmy Tat Man&book_category_id=70&description=Cracky")
                     .body(randomBook)
                     .when()
                     .post("https://library2.cydeo.com/rest/v1" + string).prettyPeek();
@@ -144,7 +143,7 @@ public class us01_StepDefs {
 
     @Then("the field value for {string} path should be equal to {string}")
     public void the_field_value_for_path_should_be_equal_to(String string, String string2) {
-
+        Assert.assertEquals(response.body().path(string),string2);
     }
 
 }
