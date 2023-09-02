@@ -1,5 +1,6 @@
 Feature: As a librarian, I want to create a new user
-  @us04
+
+  @test
   Scenario: Create a new user API
     Given I logged Library api as a "librarian"
     And Accept header is "application/json"
@@ -12,7 +13,7 @@ Feature: As a librarian, I want to create a new user
     And "user_id" field should not be null
 
 
-
+  @db @ui @test
   Scenario: Create a new user all layers
     Given I logged Library api as a "librarian"
     And Accept header is "application/json"

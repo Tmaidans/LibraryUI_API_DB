@@ -1,6 +1,6 @@
 Feature: As a librarian, I want to create a new book
 
-  @WIP
+  @test
   Scenario: Create a new book API
     Given I logged Library api as a "librarian"
     And Accept header is "application/json"
@@ -12,8 +12,7 @@ Feature: As a librarian, I want to create a new book
     And the field value for "message" path should be equal to "The book has been created."
     And "book_id" field should not be null
 
-
-  @RAndo
+  @ui @test
   Scenario: Create a new book all layers
     Given I logged Library api as a "librarian"
     And Accept header is "application/json"
